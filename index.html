@@ -117,7 +117,7 @@
     display:flex; align-items:center; justify-content:space-between;
     padding-top:12px; padding-bottom:12px;
   }
-  .brand{display:flex; align-items:center; gap:12px;}
+  .brand{display:flex; align-items:center; gap:12px; text-decoration:none; cursor:pointer;}
   .brand img{height:48px; width:auto;}
   .brand-text{font-family:'Oswald', sans-serif; font-weight:600; font-size:20px; line-height:1;}
   .brand-text span{color:var(--orange);}
@@ -502,10 +502,10 @@
 
 <header>
   <div class="wrap">
-    <div class="brand">
+    <a class="brand" href="#" id="logo-home" aria-label="На початок сторінки">
       <img src="logo.jpg" alt="Логотип Міцна Хата">
       <div class="brand-text">МІЦНА <span>ХАТА</span></div>
-    </div>
+    </a>
     <a class="header-phone" href="tel:+380977925610">+380 97 792 56 10</a>
   </div>
 </header>
@@ -715,6 +715,12 @@
         gtag('event', 'conversion', { 'send_to': 'AW-XXXXXXXXX/YOUR_PHONE_CONVERSION_LABEL' });
       }
     });
+  });
+
+  // Клік на логотип "Міцна Хата" — повернення на початок сторінки (тільки вручну, без автопрокрутки)
+  document.getElementById('logo-home').addEventListener('click', function(e){
+    e.preventDefault();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 </script>
 </body>
