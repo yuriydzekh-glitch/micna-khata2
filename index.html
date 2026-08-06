@@ -41,6 +41,7 @@
   "url": "https://micna-khata.in.ua/",
   "image": "https://micna-khata.in.ua/logo.jpg",
   "telephone": "+380977925610",
+  "email": "micna.khata@gmail.com",
   "priceRange": "$$",
   "address": {
     "@type": "PostalAddress",
@@ -498,11 +499,10 @@
   }
 </style>
 </head>
-<body>
-
+<body id="top">
 <header>
   <div class="wrap">
-    <a class="brand" href="#" id="logo-home" aria-label="На початок сторінки">
+    <a class="brand" href="#top" aria-label="Повернутись на початок сторінки">
       <img src="logo.jpg" alt="Логотип Міцна Хата">
       <div class="brand-text">МІЦНА <span>ХАТА</span></div>
     </a>
@@ -619,8 +619,9 @@
         <div class="fb-item">Орієнтовна вартість і терміни</div>
         <div class="fb-item">Без зобов'язань</div>
       </div>
-      <form id="feedback-form" name="feedback" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-        <input type="hidden" name="form-name" value="feedback">
+      <form id="feedback-form" name="feedback" method="POST">
+        <input type="hidden" name="_subject" value="Нова заявка з сайту Міцна Хата">
+        <input type="hidden" name="_template" value="table">
         <p style="position:absolute; left:-9999px;">
           <label>Не заповнюйте це поле: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
         </p>
@@ -653,6 +654,7 @@
       <div class="contact-col">
         <h4>Контакти</h4>
         <a href="tel:+380977925610">+380 97 792 56 10</a>
+        <a href="mailto:micna.khata@gmail.com">micna.khata@gmail.com</a>
         <a href="https://micna-khata.in.ua" target="_blank" rel="noopener">micna-khata.in.ua</a>
         <a href="https://www.instagram.com/micna_khata?igsh=MXFqZDRuNmR5M2V2aQ==" target="_blank" rel="noopener">Instagram: micna_khata</a>
       </div>
@@ -669,12 +671,8 @@
 </footer>
 
 <script>
-  // Кодування даних форми у формат, який очікує Netlify Forms
-  function encodeFormData(data){
-    return Object.keys(data)
-      .map(key => encodeURIComponent(key) + "=" + encodeURIComponent(data[key]))
-      .join("&");
-  }
+  // При першому реальному запиті FormSubmit надішле на цю пошту лист для підтвердження — його треба відкрити й підтвердити один раз.
+  const FORM_EMAIL = 'micna.khata@gmail.com';
 
   const form = document.getElementById('feedback-form');
   const status = document.getElementById('fb-status');
@@ -684,27 +682,47 @@
     status.className = 'form-status';
     status.textContent = '';
 
+    // Проста перевірка honeypot-поля — якщо бот заповнив приховане поле, тихо ігноруємо відправку
+    const honeypot = form.querySelector('[name="bot-field"]').value;
+    if (honeypot) {
+      status.textContent = 'Дякуємо! Заявку надіслано, зателефонуємо найближчим часом.';
+      status.className = 'form-status ok';
+      form.reset();
+      return;
+    }
+
     const formData = new FormData(form);
     const payload = {};
     formData.forEach((value, key) => { payload[key] = value; });
 
-    fetch('/', {
+    // Відправляємо паралельно двома незалежними каналами:
+    // 1) FormSubmit — email;  2) /api/submit — Telegram + Google Таблиця.
+    // Якщо один канал впаде, це не заблокує інший і не зламає форму.
+    const emailReq = fetch('https://formsubmit.co/ajax/' + FORM_EMAIL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: encodeFormData(payload)
-    })
-      .then(() => {
-        status.textContent = 'Дякуємо! Заявку надіслано, зателефонуємо найближчим часом.';
-        status.className = 'form-status ok';
-        form.reset();
-        // Google Ads: подія конверсії при відправці заявки
-        if (typeof gtag === 'function') {
-          gtag('event', 'conversion', { 'send_to': 'AW-XXXXXXXXX/YOUR_CONVERSION_LABEL' });
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const notifyReq = fetch('/api/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => null); // ця функція є лише на Cloudflare, тому помилку тихо ігноруємо
+
+    Promise.allSettled([emailReq, notifyReq])
+      .then(([emailResult]) => {
+        const emailOk = emailResult.status === 'fulfilled' && emailResult.value.ok;
+        if (emailOk) {
+          status.textContent = 'Дякуємо! Заявку надіслано, зателефонуємо найближчим часом.';
+          status.className = 'form-status ok';
+          form.reset();
+          if (typeof gtag === 'function') {
+            gtag('event', 'conversion', { 'send_to': 'AW-XXXXXXXXX/YOUR_CONVERSION_LABEL' });
+          }
+        } else {
+          status.textContent = 'Не вдалося надіслати. Зателефонуйте, будь ласка: +380 97 792 56 10.';
+          status.className = 'form-status err';
         }
-      })
-      .catch(() => {
-        status.textContent = 'Не вдалося надіслати. Зателефонуйте, будь ласка: +380 97 792 56 10.';
-        status.className = 'form-status err';
       });
   });
 
@@ -715,12 +733,6 @@
         gtag('event', 'conversion', { 'send_to': 'AW-XXXXXXXXX/YOUR_PHONE_CONVERSION_LABEL' });
       }
     });
-  });
-
-  // Клік на логотип "Міцна Хата" — повернення на початок сторінки (тільки вручну, без автопрокрутки)
-  document.getElementById('logo-home').addEventListener('click', function(e){
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   });
 </script>
 </body>
