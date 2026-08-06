@@ -514,9 +514,12 @@
     footer{padding:48px 0 24px;}
   }
   @media (max-width:640px){
-    /* На вузьких екранах ховаємо кнопку "Залишити заявку" в хедері —
-       залишаємо тільки телефон, щоб не тіснити лого. Кнопки на формі й hero лишаються. */
-    .header-cta{display:none;}
+    /* На вузьких екранах кнопка "Залишити заявку" переносяться в окремий
+       повноширинний рядок під лого й телефоном, а не ховається. */
+    header .wrap{flex-wrap:wrap; row-gap:10px;}
+    .header-ctas{width:100%; gap:8px;}
+    .header-ctas .header-cta{flex:1; text-align:center;}
+    .header-ctas .header-phone{flex:1; text-align:center;}
     .form-actions{flex-direction:column; align-items:stretch;}
     .form-actions .btn-submit, .form-actions .btn-call{text-align:center;}
   }
