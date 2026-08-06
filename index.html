@@ -122,6 +122,22 @@
   .brand img{height:48px; width:auto;}
   .brand-text{font-family:'Oswald', sans-serif; font-weight:600; font-size:20px; line-height:1;}
   .brand-text span{color:var(--orange);}
+  .header-ctas{display:flex; align-items:center; gap:10px;}
+  .header-cta{
+    font-family:'Oswald', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.3px;
+    text-transform:uppercase;
+    background:var(--orange);
+    color:#fff;
+    text-decoration:none;
+    border:2px solid var(--orange);
+    padding:10px 18px;
+    transition:.2s;
+    white-space:nowrap;
+  }
+  .header-cta:hover{background:#cf691f; border-color:#cf691f;}
   .header-phone{
     font-family:'Oswald', sans-serif;
     font-weight:600;
@@ -386,6 +402,26 @@
     margin-top:-4px;
     margin-bottom:20px;
   }
+  .form-actions{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+  }
+  .btn-call{
+    font-family:'Oswald', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.4px;
+    text-transform:uppercase;
+    color:var(--navy);
+    text-decoration:none;
+    padding:14px 22px;
+    border:2px solid var(--navy);
+    transition:.2s;
+    white-space:nowrap;
+  }
+  .btn-call:hover{background:var(--navy); color:var(--cream);}
   .btn-submit{
     font-family:'Oswald', sans-serif;
     font-weight:600;
@@ -477,6 +513,13 @@
     .feedback .side, .feedback form{padding:28px 22px;}
     footer{padding:48px 0 24px;}
   }
+  @media (max-width:640px){
+    /* На вузьких екранах ховаємо кнопку "Залишити заявку" в хедері —
+       залишаємо тільки телефон, щоб не тіснити лого. Кнопки на формі й hero лишаються. */
+    .header-cta{display:none;}
+    .form-actions{flex-direction:column; align-items:stretch;}
+    .form-actions .btn-submit, .form-actions .btn-call{text-align:center;}
+  }
   @media (max-width:520px){
     header .wrap{padding-top:10px; padding-bottom:10px; gap:10px;}
     .brand{gap:8px; min-width:0;}
@@ -506,7 +549,10 @@
       <img src="logo.jpg" alt="Логотип Міцна Хата">
       <div class="brand-text">МІЦНА <span>ХАТА</span></div>
     </a>
-    <a class="header-phone" href="tel:+380977925610">+380 97 792 56 10</a>
+    <div class="header-ctas">
+      <a class="header-cta" href="#request">Залишити заявку</a>
+      <a class="header-phone" href="tel:+380977925610">+380 97 792 56 10</a>
+    </div>
   </div>
 </header>
 
@@ -637,7 +683,10 @@
           <label for="fb-message">Що потрібно зробити</label>
           <textarea id="fb-message" name="message" placeholder="Наприклад: ремонт ванної кімнати, 6 м², Славута"></textarea>
         </div>
-        <button type="submit" class="btn-submit">Надіслати заявку</button>
+        <div class="form-actions">
+          <button type="submit" class="btn-submit">Надіслати заявку</button>
+          <a class="btn-call" href="tel:+380977925610">Зателефонувати</a>
+        </div>
         <p class="form-status" id="fb-status"></p>
       </form>
     </div>
