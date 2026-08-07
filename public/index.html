@@ -671,7 +671,7 @@
         <div class="fb-item">Орієнтовна вартість і терміни</div>
         <div class="fb-item">Без зобов'язань</div>
       </div>
-      <form id="feedback-form" name="feedback" method="POST">
+      <form id="feedback-form" name="feedback" method="POST" novalidate>
         <input type="hidden" name="_subject" value="Нова заявка з сайту Міцна Хата">
         <input type="hidden" name="_template" value="table">
         <p style="position:absolute; left:-9999px;">
@@ -679,11 +679,24 @@
         </p>
         <div class="field">
           <label for="fb-name">Ім'я</label>
-          <input type="text" id="fb-name" name="name" placeholder="Як до вас звертатись" required>
+          <input
+            type="text"
+            id="fb-name"
+            name="name"
+            placeholder="Як до вас звертатись"
+            inputmode="text"
+            autocomplete="name"
+            required>
         </div>
         <div class="field">
-          <label for="fb-phone">Телефон</label>
-          <input type="tel" id="fb-phone" name="phone" placeholder="+380" required>
+          <label for="fb-phone">Телефон або Email</label>
+          <input
+            type="text"
+            id="fb-phone"
+            name="phone"
+            placeholder="+380 971234567 або email@example.com"
+            autocomplete="tel"
+            required>
         </div>
         <div class="field">
           <label for="fb-message">Що потрібно зробити</label>
@@ -730,6 +743,25 @@
 
   const form = document.getElementById('feedback-form');
   const status = document.getElementById('fb-status');
+  const nameInput = document.getElementById('fb-name');
+  const contactInput = document.getElementById('fb-phone');
+
+  // Дозволені символи для імені: українські та латинські літери, апостроф, дефіс, пробіл.
+  const NAME_ALLOWED = /[^A-Za-zА-ЯЁа-яёІіЇїЄєҐґ'’\-\s]/g;
+  // Дозволені символи для поля "телефон або email": цифри, +, дужки, дефіс, пробіл (телефон)
+  // або літери, цифри, @, крапка, підкреслення, дефіс (email).
+  const CONTACT_ALLOWED = /[^0-9+()\-\s@._A-Za-z]/g;
+
+  const PHONE_PATTERN = /^\+?[0-9\s\-()]{6,}$/;
+  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+  // Прибираємо заборонені символи в реальному часі, під час вводу
+  nameInput.addEventListener('input', function () {
+    this.value = this.value.replace(NAME_ALLOWED, '');
+  });
+  contactInput.addEventListener('input', function () {
+    this.value = this.value.replace(CONTACT_ALLOWED, '');
+  });
 
   form.addEventListener('submit', function(e){
     e.preventDefault();
@@ -742,6 +774,25 @@
       status.textContent = 'Дякуємо! Заявку надіслано, зателефонуємо найближчим часом.';
       status.className = 'form-status ok';
       form.reset();
+      return;
+    }
+
+    const nameValue = nameInput.value.trim();
+    const contactValue = contactInput.value.trim();
+
+    if (!nameValue) {
+      status.textContent = 'Вкажіть, будь ласка, ваше ім\u2019я.';
+      status.className = 'form-status err';
+      nameInput.focus();
+      return;
+    }
+
+    const isValidPhone = PHONE_PATTERN.test(contactValue);
+    const isValidEmail = EMAIL_PATTERN.test(contactValue);
+    if (!isValidPhone && !isValidEmail) {
+      status.textContent = 'Введіть коректний телефон (тільки цифри) або email.';
+      status.className = 'form-status err';
+      contactInput.focus();
       return;
     }
 
