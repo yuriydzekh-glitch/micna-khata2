@@ -40,7 +40,7 @@ async function handleSubmit(request, env) {
   const tasks = [];
 
   // 1. Telegram
-  if (env.TG_BOT_TOKEN && env.TG_CHAT_ID) {
+  if (env.TELEGRAM_BOT_TOKEN && env.TELEGRAM_CHAT_ID) {
     const text =
       '🏗 Нова заявка з сайту Міцна Хата\n\n' +
       `Ім'я: ${name}\n` +
@@ -48,29 +48,50 @@ async function handleSubmit(request, env) {
       (message ? `Що потрібно: ${message}` : 'Коментар не залишено');
 
     tasks.push(
-      fetch(`https://api.telegram.org/bot${env.TG_BOT_TOKEN}/sendMessage`, {
+      fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: env.TG_CHAT_ID, text })
+        body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text })
       })
     );
   }
 
   // 2. Google Таблиця (через Google Apps Script Web App)
   if (env.GS_WEBHOOK_URL) {
-    tasks.push(
-      fetch(env.GS_WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, phone, message, date: new Date().toISOString() })
-      })
-    );
+    tasks.push(postToGoogleSheets(env.GS_WEBHOOK_URL, { name, phone, message, date: new Date().toISOString() }));
   }
 
   const results = await Promise.allSettled(tasks);
   const anyFailed = results.some(r => r.status === 'rejected');
 
+  results.forEach((r, i) => {
+    if (r.status === 'fulfilled') {
+      console.log(`task ${i} status:`, r.value.status);
+    } else {
+      console.log(`task ${i} failed:`, r.reason);
+    }
+  });
+
   return json({ ok: true, partial: anyFailed });
+}
+
+// Google Apps Script Web App завжди відповідає на POST редиректом (302) на службову адресу
+// виконання скрипта. Стандартний fetch() при такому редиректі перетворює POST на GET
+// і губить тіло запиту — тому редирект обробляємо вручну й повторюємо POST з тими самими даними.
+async function postToGoogleSheets(url, payload) {
+  const body = JSON.stringify(payload);
+  const headers = { 'Content-Type': 'application/json' };
+
+  let res = await fetch(url, { method: 'POST', headers, body, redirect: 'manual' });
+
+  if (res.status >= 300 && res.status < 400) {
+    const location = res.headers.get('Location');
+    if (location) {
+      res = await fetch(location, { method: 'POST', headers, body, redirect: 'follow' });
+    }
+  }
+
+  return res;
 }
 
 function json(obj, status = 200) {
