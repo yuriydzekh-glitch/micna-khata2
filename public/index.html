@@ -671,7 +671,7 @@
         <div class="fb-item">Орієнтовна вартість і терміни</div>
         <div class="fb-item">Без зобов'язань</div>
       </div>
-      <form id="feedback-form" name="feedback" method="POST" novalidate>
+      <form id="feedback-form" name="feedback" method="POST">
         <input type="hidden" name="_subject" value="Нова заявка з сайту Міцна Хата">
         <input type="hidden" name="_template" value="table">
         <p style="position:absolute; left:-9999px;">
@@ -679,24 +679,17 @@
         </p>
         <div class="field">
           <label for="fb-name">Ім'я</label>
-          <input
-            type="text"
-            id="fb-name"
-            name="name"
-            placeholder="Як до вас звертатись"
-            inputmode="text"
-            autocomplete="name"
-            required>
+          <input type="text" id="fb-name" name="name" placeholder="Як до вас звертатись"
+                 pattern="[A-Za-zА-ЯҐЄІЇа-яґєіїЁё'’\- ]+"
+                 title="Тільки літери"
+                 autocomplete="name" required>
         </div>
         <div class="field">
           <label for="fb-phone">Телефон або Email</label>
-          <input
-            type="text"
-            id="fb-phone"
-            name="phone"
-            placeholder="+380 971234567 або email@example.com"
-            autocomplete="tel"
-            required>
+          <input type="text" id="fb-phone" name="phone" placeholder="+380 або пошта@example.com"
+                 pattern="(\+?\d[\d\s\-\(\)]{6,17}|[A-Za-z0-9._%+\-]+@[A-Za-z0-9.\-]+\.[A-Za-z]{2,})"
+                 title="Введіть номер телефону або email"
+                 autocomplete="tel" required>
         </div>
         <div class="field">
           <label for="fb-message">Що потрібно зробити</label>
@@ -743,24 +736,17 @@
 
   const form = document.getElementById('feedback-form');
   const status = document.getElementById('fb-status');
+
+  // Живе очищення поля "Ім'я" — лишає тільки літери, пробіли, апостроф і дефіс
   const nameInput = document.getElementById('fb-name');
-  const contactInput = document.getElementById('fb-phone');
-
-  // Дозволені символи для імені: українські та латинські літери, апостроф, дефіс, пробіл.
-  const NAME_ALLOWED = /[^A-Za-zА-ЯЁа-яёІіЇїЄєҐґ'’\-\s]/g;
-  // Дозволені символи для поля "телефон або email": цифри, +, дужки, дефіс, пробіл (телефон)
-  // або літери, цифри, @, крапка, підкреслення, дефіс (email).
-  const CONTACT_ALLOWED = /[^0-9+()\-\s@._A-Za-z]/g;
-
-  const PHONE_PATTERN = /^\+?[0-9\s\-()]{6,}$/;
-  const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-
-  // Прибираємо заборонені символи в реальному часі, під час вводу
-  nameInput.addEventListener('input', function () {
-    this.value = this.value.replace(NAME_ALLOWED, '');
+  nameInput.addEventListener('input', function(){
+    this.value = this.value.replace(/[^A-Za-zА-ЯҐЄІЇа-яґєіїЁё'’\- ]/g, '');
   });
-  contactInput.addEventListener('input', function () {
-    this.value = this.value.replace(CONTACT_ALLOWED, '');
+
+  // Живе очищення поля "Телефон або Email" — лишає тільки цифри, +, дужки, дефіс, пробіл і символи email
+  const phoneInput = document.getElementById('fb-phone');
+  phoneInput.addEventListener('input', function(){
+    this.value = this.value.replace(/[^A-Za-z0-9@._+\-\s()]/g, '');
   });
 
   form.addEventListener('submit', function(e){
@@ -774,25 +760,6 @@
       status.textContent = 'Дякуємо! Заявку надіслано, зателефонуємо найближчим часом.';
       status.className = 'form-status ok';
       form.reset();
-      return;
-    }
-
-    const nameValue = nameInput.value.trim();
-    const contactValue = contactInput.value.trim();
-
-    if (!nameValue) {
-      status.textContent = 'Вкажіть, будь ласка, ваше ім\u2019я.';
-      status.className = 'form-status err';
-      nameInput.focus();
-      return;
-    }
-
-    const isValidPhone = PHONE_PATTERN.test(contactValue);
-    const isValidEmail = EMAIL_PATTERN.test(contactValue);
-    if (!isValidPhone && !isValidEmail) {
-      status.textContent = 'Введіть коректний телефон (тільки цифри) або email.';
-      status.className = 'form-status err';
-      contactInput.focus();
       return;
     }
 
