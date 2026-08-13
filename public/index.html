@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Міцна Хата — будівництво та ремонт у Славуті | Ремонт квартир, будинків, фасади</title>
 <meta name="description" content="Міцна Хата — будівельна бригада у Славуті та районі. Ремонт квартир і будинків, фасадні роботи, паркани, благоустрій, будівництво з нуля, малярні, плиткові, електромонтажні та сантехнічні роботи.">
-<meta name="keywords" content="ремонт квартир Славута, будівництво будинків Славута, ремонт будинків, фасадні роботи, паркани, благоустрій, малярні роботи, плитка, електромонтаж, сантехніка">
+<meta name="keywords" content="ремонт квартир Славута, будівництво будинків Славута, ремонт будинків, фасадні роботи, паркани, благоустрій, малярні роботи, плитка, електромонтаж, сантехніка, ремонт квартир Рівне, будівництво будинків Рівне, ремонт будинків Рівне">
 <meta name="robots" content="index, follow">
 <meta name="author" content="Міцна Хата">
 <link rel="canonical" href="https://micna-khata.in.ua/">
@@ -49,7 +49,12 @@
     "addressRegion": "Хмельницька область",
     "addressCountry": "UA"
   },
-  "areaServed": "Славута та район",
+  "areaServed": [
+    { "@type": "City", "name": "Славута" },
+    { "@type": "AdministrativeArea", "name": "Славутський район" },
+    { "@type": "City", "name": "Рівне" },
+    { "@type": "AdministrativeArea", "name": "Рівненська область" }
+  ],
   "sameAs": [
     "https://www.instagram.com/micna_khata"
   ],
@@ -63,6 +68,64 @@
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Укладання плитки" } },
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Електромонтажні роботи" } },
     { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Сантехнічні роботи" } }
+  ]
+}
+</script>
+
+<!-- Structured data: FAQPage -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Скільки коштує ремонт квартири чи будівництво будинку?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Вартість залежить від площі, стану об'єкта та обсягу робіт, тому точну ціну називаємо лише після виїзду на замір. Орієнтовну вартість можемо озвучити по телефону, якщо опишете об'єкт і завдання."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Які терміни виконання робіт?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Терміни узгоджуємо індивідуально після оцінки об'єкта: косметичний ремонт кімнати чи ванної може зайняти кілька днів–тижнів, будівництво будинку з нуля — кілька місяців. Точний графік озвучуємо після замірів."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Ви працюєте зі своїми матеріалами чи потрібно купувати самому?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Закуповуємо всі матеріали самостійно — за вашим бюджетом і побажаннями. Це зручніше і вам не потрібно самим їздити по будматеріалах, шукати постачальників чи слідкувати за доставкою."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Чи даєте гарантію на виконані роботи?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Так, гарантуємо якість виконаних робіт. Усі етапи виконує наша власна бригада без субпідрядників, тому легко контролювати якість і оперативно усунути зауваження, якщо вони виникнуть."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "У яких населених пунктах ви працюєте?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Основно беремо об'єкти у Славуті та районі. Зона виїзду поступово розширюється — якщо ваш об'єкт за межами району, уточніть можливість виїзду по телефону."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Як замовити виїзд на замір?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Залиште заявку у формі на сайті або зателефонуйте — передзвонимо протягом дня, узгодимо зручний час виїзду на об'єкт і оцінимо обсяг робіт безкоштовно."
+      }
+    }
   ]
 }
 </script>
@@ -446,6 +509,46 @@
   .form-status.ok{color:#1a7a3c; display:block;}
   .form-status.err{color:#b3261e; display:block;}
 
+  /* FAQ */
+  .faq{padding:72px 0; border-top:2px solid var(--navy);}
+  .faq-list{
+    border:2px solid var(--navy);
+  }
+  .faq-item{
+    border-bottom:2px solid var(--navy);
+    background:#fff;
+  }
+  .faq-item:last-child{border-bottom:none;}
+  .faq-item summary{
+    list-style:none;
+    cursor:pointer;
+    padding:20px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+    font-family:'Oswald', sans-serif;
+    font-weight:600;
+    font-size:16px;
+    letter-spacing:0.3px;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary::after{
+    content:"+";
+    font-size:22px;
+    color:var(--orange);
+    flex:none;
+    transition:transform .2s;
+  }
+  .faq-item[open] summary::after{transform:rotate(45deg);}
+  .faq-item[open] summary{background:var(--cream);}
+  .faq-item .faq-answer{
+    padding:0 24px 22px;
+    font-size:14.5px;
+    color:#3c4453;
+    max-width:70ch;
+  }
+
   @media (max-width:860px){
     .feedback .inner{grid-template-columns:1fr;}
   }
@@ -656,7 +759,42 @@
     </div>
     <div class="col">
       <h3>Географія розширюється</h3>
-      <p>Наразі беремо об'єкти у Славуті та районі, найближчим часом розширюємо зону виїзду.</p>
+      <p>Основні об'єкти — у Славуті та районі, також беремо об'єкти в Рівному та області. Уточнюйте можливість виїзду по телефону.</p>
+    </div>
+  </div>
+</section>
+
+<section class="faq" id="faq">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Питання, які часто запитують</h2>
+      <p>Коротко про терміни, вартість і те, як ми працюємо.</p>
+    </div>
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary>Скільки коштує ремонт квартири чи будівництво будинку?</summary>
+        <p class="faq-answer">Вартість залежить від площі, стану об'єкта та обсягу робіт, тому точну ціну називаємо лише після виїзду на замір. Орієнтовну вартість можемо озвучити по телефону, якщо опишете об'єкт і завдання.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Які терміни виконання робіт?</summary>
+        <p class="faq-answer">Терміни узгоджуємо індивідуально після оцінки об'єкта: косметичний ремонт кімнати чи ванної може зайняти кілька днів–тижнів, будівництво будинку з нуля — кілька місяців. Точний графік озвучуємо після замірів.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Ви працюєте зі своїми матеріалами чи потрібно купувати самому?</summary>
+        <p class="faq-answer">Закуповуємо всі матеріали самостійно — за вашим бюджетом і побажаннями. Це зручніше і вам не потрібно самим їздити по будматеріалах, шукати постачальників чи слідкувати за доставкою.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Чи даєте гарантію на виконані роботи?</summary>
+        <p class="faq-answer">Так, гарантуємо якість виконаних робіт. Усі етапи виконує наша власна бригада без субпідрядників, тому легко контролювати якість і оперативно усунути зауваження, якщо вони виникнуть.</p>
+      </details>
+      <details class="faq-item">
+        <summary>У яких населених пунктах ви працюєте?</summary>
+        <p class="faq-answer">Основно беремо об'єкти у Славуті та районі, також виїжджаємо в Рівне та область. Якщо ваш об'єкт в іншій локації — уточніть можливість виїзду по телефону.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Як замовити виїзд на замір?</summary>
+        <p class="faq-answer">Залиште заявку у формі на сайті або зателефонуйте — передзвонимо протягом дня, узгодимо зручний час виїзду на об'єкт і оцінимо обсяг робіт безкоштовно.</p>
+      </details>
     </div>
   </div>
 </section>
