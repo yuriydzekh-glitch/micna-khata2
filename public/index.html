@@ -16,14 +16,16 @@
 <meta property="og:title" content="Міцна Хата — будівництво та ремонт у Славуті">
 <meta property="og:description" content="Ремонт квартир і будинків, фасадні роботи, паркани, благоустрій, будівництво з нуля. Своя бригада, повний цикл робіт.">
 <meta property="og:url" content="https://micna-khata.in.ua/">
-<meta property="og:image" content="https://micna-khata.in.ua/logo.jpg">
+<meta property="og:image" content="https://micna-khata.in.ua/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="uk_UA">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Міцна Хата — будівництво та ремонт у Славуті">
 <meta name="twitter:description" content="Ремонт квартир і будинків, фасадні роботи, паркани, благоустрій, будівництво з нуля.">
-<meta name="twitter:image" content="https://micna-khata.in.ua/logo.jpg">
+<meta name="twitter:image" content="https://micna-khata.in.ua/og-image.jpg">
 
 <link rel="icon" type="image/jpeg" href="logo.jpg">
 <link rel="apple-touch-icon" href="logo.jpg">
@@ -942,6 +944,14 @@
       if (typeof gtag === 'function') {
         gtag('event', 'conversion', { 'send_to': 'AW-XXXXXXXXX/YOUR_PHONE_CONVERSION_LABEL' });
       }
+    });
+  });
+
+  // Плавний скрол нагору без додавання #top в адресний рядок
+  document.querySelectorAll('a[href="#top"]').forEach(function(link){
+    link.addEventListener('click', function(e){
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
 </script>
